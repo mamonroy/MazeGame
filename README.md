@@ -1,5 +1,12 @@
 Tasks to do:
 
+```
+June 20 Notes:
+	Basic TUI Options
+	Maze Class
+	Game Design 
+```
+
 GAMEPLAY REQUIREMENTS:
 
 ``` insert here ```
