@@ -45,4 +45,4 @@ public class Position {
             yPosition++;
         }
     }
-}
+} // Position.java
