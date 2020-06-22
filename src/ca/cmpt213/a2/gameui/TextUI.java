@@ -9,7 +9,7 @@ public class TextUI {
 
     public static void mainDisplay() {
         System.out.println("DIRECTIONS:");
-        System.out.format("\t %s \n ", directions );
+        System.out.format("\t%s\n", directions );
         System.out.println("LEGEND:");
 
         for(int i = 0; i < legend.length; i++) {
@@ -17,8 +17,8 @@ public class TextUI {
         }
 
         System.out.println("MOVES:");
-        System.out.format("\t Use %s, %s, %s, and %s to move. \n", moves[0], moves[1], moves[2], moves[3]);
-        System.out.println("(You must press enter after each move).");
+        System.out.format("\tUse %s, %s, %s, and %s to move.\n", moves[0], moves[1], moves[2], moves[3]);
+        System.out.println("\t(You must press enter after each move).");
     }
 
     public static void outsideCells() {
@@ -29,12 +29,12 @@ public class TextUI {
         for (int i = 0; i < tall; i++) {
             if(i == 0 || i == tall - 1) {
                 for (int j = 0; j < width; j++) {
-                    System.out.print("*");
+                    System.out.print("#");
                 }
             } else {
                 for (int j = 0; j < width; j++) {
                     if (j == 0 || j == width - 1) {
-                        System.out.print("*");
+                        System.out.print("#");
                     } else {
                         System.out.print(" ");
                     }
