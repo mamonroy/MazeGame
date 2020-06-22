@@ -1,4 +1,5 @@
 package ca.cmpt213.a2.gameui;
+import ca.cmpt213.a2.model.*;
 
 public class TextUI {
 
@@ -19,5 +20,27 @@ public class TextUI {
         System.out.format("\t Use %s, %s, %s, and %s to move. \n", moves[0], moves[1], moves[2], moves[3]);
         System.out.println("(You must press enter after each move).");
     }
-    
+
+    public static void outsideCells() {
+
+        int width = Maze.getMazeWidth();
+        int tall = Maze.getMazeTall();
+
+        for (int i = 0; i < tall; i++) {
+            if(i == 0 || i == tall - 1) {
+                for (int j = 0; j < width; j++) {
+                    System.out.print("*");
+                }
+            } else {
+                for (int j = 0; j < width; j++) {
+                    if (j == 0 || j == width - 1) {
+                        System.out.print("*");
+                    } else {
+                        System.out.print(" ");
+                    }
+                }
+            }
+            System.out.println("");
+        }
+    }
 }
