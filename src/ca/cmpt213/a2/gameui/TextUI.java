@@ -1,5 +1,6 @@
 package ca.cmpt213.a2.gameui;
 import ca.cmpt213.a2.model.*;
+import java.util.*;
 
 public class TextUI {
 
@@ -26,6 +27,7 @@ public class TextUI {
         int width = Maze.getMazeWidth();
         int tall = Maze.getMazeTall();
 
+        System.out.println("Maze");
         for (int i = 0; i < tall; i++) {
             if(i == 0 || i == tall - 1) {
                 for (int j = 0; j < width; j++) {
@@ -42,5 +44,34 @@ public class TextUI {
             }
             System.out.println("");
         }
+    }
+
+    public static int inputMonstersKill() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Total number of monsters to be killed: ");
+        int monsters_dead = sc.nextInt();
+        return monsters_dead;
+    }
+    public static int inputPowers() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Number of powers currently in possession: ");
+        int powers = sc.nextInt();
+        return powers;
+    }
+    public static int inputMonstersAlive() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Number of monsters alive: ");
+        int monsters_alive = sc.nextInt();
+        return monsters_alive;
+    }
+    public static char inputMove() {
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your move [WASD?]: ");
+        char move = sc.next().charAt(0);
+        return move;
     }
 }

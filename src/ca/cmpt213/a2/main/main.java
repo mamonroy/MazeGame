@@ -6,5 +6,10 @@ public class main {
 
         TextUI.mainDisplay();
         TextUI.outsideCells();
+        int monsters_kill = TextUI.inputMonstersKill();
+        int powers = TextUI.inputPowers();
+        int monsters_alive = TextUI.inputMonstersAlive();
+        char move = TextUI.inputMove();
+        
     }
 }
