@@ -6,8 +6,8 @@ public class Position {
     private static final int MAZE_BORDER_LIMIT_TOP = 0;
     private static final int MAZE_BORDER_LIMIT_BOTTOM = 13;
 
-    private int xPosition;
-    private int yPosition;
+    private int xPosition; // corresponds to column number in the maze
+    private int yPosition; // corresponds to row number in the maze
 
     public Position(int xPosition, int yPosition) {
         this.xPosition = xPosition;

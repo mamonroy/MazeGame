@@ -10,11 +10,12 @@ public class Cell {
 
     public void setContent(CellContent content) {
         switch (content) {
+            case EMPTY -> this.content = CellContent.EMPTY;
             case WALL -> this.content = CellContent.WALL;
             case HERO -> this.content = CellContent.HERO;
             case MONSTER -> this.content = CellContent.MONSTER;
             case POWER -> this.content = CellContent.POWER;
-            default -> { assert false; }
+            default -> { assert false : "Unknown error content!"; }
         }
     }
 
@@ -22,7 +23,7 @@ public class Cell {
         return isExplored;
     }
 
-    public void setExplored(Boolean explored) {
-        isExplored = explored;
+    public void setExplored() {
+        isExplored = true;
     }
-}
+} // Cell.java

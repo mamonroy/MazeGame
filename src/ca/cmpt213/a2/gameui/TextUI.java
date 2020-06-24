@@ -4,13 +4,13 @@ import java.util.*;
 
 public class TextUI {
 
-    private static String directions = "Kill 3 Monsters!";
+    private static String instructions = "Kill 3 Monsters!";
     private static String[] legend = {"#: Wall", "@: You (a hero)", "!: Monster", "$: Power", ". Unexplored space"};
     private static String[] moves = {"W (up)", "A (left", "S (down)", "D (right)"};
 
     public static void mainDisplay() {
         System.out.println("DIRECTIONS:");
-        System.out.format("\t%s\n", directions );
+        System.out.format("\t%s\n", instructions);
         System.out.println("LEGEND:");
 
         for(int i = 0; i < legend.length; i++) {
@@ -25,11 +25,11 @@ public class TextUI {
     public static void outsideCells() {
 
         int width = Maze.getMazeWidth();
-        int tall = Maze.getMazeTall();
+        int height = Maze.getMazeHeight();
 
         System.out.println("Maze");
-        for (int i = 0; i < tall; i++) {
-            if(i == 0 || i == tall - 1) {
+        for (int i = 0; i < height; i++) {
+            if(i == 0 || i == height - 1) {
                 for (int j = 0; j < width; j++) {
                     System.out.print("#");
                 }
@@ -53,6 +53,7 @@ public class TextUI {
         int monsters_dead = sc.nextInt();
         return monsters_dead;
     }
+
     public static int inputPowers() {
 
         Scanner sc = new Scanner(System.in);
@@ -60,6 +61,7 @@ public class TextUI {
         int powers = sc.nextInt();
         return powers;
     }
+
     public static int inputMonstersAlive() {
 
         Scanner sc = new Scanner(System.in);
@@ -67,6 +69,7 @@ public class TextUI {
         int monsters_alive = sc.nextInt();
         return monsters_alive;
     }
+
     public static char inputMove() {
 
         Scanner sc = new Scanner(System.in);
@@ -74,4 +77,4 @@ public class TextUI {
         char move = sc.next().charAt(0);
         return move;
     }
-}
+} // TextUI.java

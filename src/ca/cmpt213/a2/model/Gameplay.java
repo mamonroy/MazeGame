@@ -6,4 +6,4 @@ public class Gameplay {
     private static Hero hero;
     private static List<Monster> monsters;
     private static Power power;
-}
+} // Gameplay.java
