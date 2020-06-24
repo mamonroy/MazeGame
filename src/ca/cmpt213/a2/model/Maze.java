@@ -216,7 +216,7 @@ public class Maze {
         for(int i = 0; i < MAZE_HEIGHT; i++ ) {
             for(int j = 0; j < MAZE_WIDTH; j++) {
                 if(mazeCells[i][j].getExplored() == true) {
-                    System.out.print(".");
+                    System.out.print(" ");
                 }
                 else {
                     System.out.print("#");
