@@ -26,4 +26,6 @@ public class Cell {
     public void setExplored() {
         isExplored = true;
     }
+
+    public void setBordersUnexplored() { isExplored = false; }
 } // Cell.java

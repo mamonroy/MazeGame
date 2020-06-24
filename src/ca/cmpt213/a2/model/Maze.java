@@ -14,16 +14,23 @@ public class Maze {
     private static final int HERO_INITIAL_ROW = FIRST_ROW + 1;
     private static final int HERO_INITIAL_COL = FIRST_COL + 1;
 
-
     // A maze with 20 columns (20 cells wide) and 15 rows (15 cells tall)
     // Maze rows are visualized and counted from top to bottom, left to right
     private static final Cell[][] mazeCells = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
 
     public Maze() {
-        setBorderWallsAsExplored();
+
+        for(int i = 0; i < MAZE_HEIGHT; i++) {
+            for(int j = 0; j < MAZE_WIDTH ; j++) {
+                mazeCells[i][j] = new Cell();
+            }
+        }
+//        setBorderWallsAsExplored();
         generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
         clearWallsAtCorners();
         removeUnwantedWalls();
+        // Makes sure that the borders are set back to not reached!
+        setBorderWallsAsUnexplored();
     }
 
     public static int getMazeWidth() {
@@ -34,16 +41,32 @@ public class Maze {
         return MAZE_HEIGHT;
     }
 
-    private void setBorderWallsAsExplored() {
+    private void setBorderWallsAsUnexplored() {
+
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
             setCellAsExplored(row, FIRST_COL);
             setCellAsExplored(row, LAST_COL);
+            mazeCells[row][FIRST_COL].setBordersUnexplored();
+            mazeCells[row][LAST_COL].setBordersUnexplored();
         }
+
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
             setCellAsExplored(FIRST_ROW, col);
             setCellAsExplored(LAST_ROW, col);
+            mazeCells[FIRST_ROW][col].setBordersUnexplored();
+            mazeCells[LAST_ROW][col].setBordersUnexplored();
         }
     }
+//    private void setBorderWallsAsExplored() {
+//        for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
+//            setCellAsExplored(row, FIRST_COL);
+//            setCellAsExplored(row, LAST_COL);
+//        }
+//        for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
+//            setCellAsExplored(FIRST_ROW, col);
+//            setCellAsExplored(LAST_ROW, col);
+//        }
+//    }
 
     private void setCellAsExplored(int rowNum, int colNum) {
         mazeCells[rowNum][colNum].setExplored();
@@ -182,5 +205,24 @@ public class Maze {
 
     public void setMazeCellContent(int rowNum, int colNum, CellContent content) {
         mazeCells[rowNum][colNum].setContent(content);
+    }
+
+    public Cell[][] getMazeCells() {
+        return mazeCells;
+    }
+
+    public void displayMaze() {
+
+        for(int i = 0; i < MAZE_HEIGHT; i++ ) {
+            for(int j = 0; j < MAZE_WIDTH; j++) {
+                if(mazeCells[i][j].getExplored() == true) {
+                    System.out.print(".");
+                }
+                else {
+                    System.out.print("#");
+                }
+            }
+            System.out.println("");
+        }
     }
 } // Maze.java
