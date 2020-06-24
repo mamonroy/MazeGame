@@ -25,12 +25,13 @@ public class Maze {
                 mazeCells[i][j] = new Cell();
             }
         }
-//        setBorderWallsAsExplored();
+
+        setBorderWallsAsExplored();
         generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
         clearWallsAtCorners();
         removeUnwantedWalls();
         // Makes sure that the borders are set back to not reached!
-        setBorderWallsAsUnexplored();
+//        setBorderWallsAsUnexplored();
     }
 
     public static int getMazeWidth() {
@@ -41,16 +42,16 @@ public class Maze {
         return MAZE_HEIGHT;
     }
 
-    private void setBorderWallsAsUnexplored() {
+    private void setBorderWallsAsExplored() {
 
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
-            mazeCells[row][FIRST_COL].setBordersUnexplored();
-            mazeCells[row][LAST_COL].setBordersUnexplored();
+            mazeCells[row][FIRST_COL].setExplored();
+            mazeCells[row][LAST_COL].setExplored();
         }
 
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
-            mazeCells[FIRST_ROW][col].setBordersUnexplored();
-            mazeCells[LAST_ROW][col].setBordersUnexplored();
+            mazeCells[FIRST_ROW][col].setExplored();
+            mazeCells[LAST_ROW][col].setExplored();
         }
     }
 
@@ -209,7 +210,7 @@ public class Maze {
 
         for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
             for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
-                if (mazeCells[i][j].getExplored()) {
+                if (mazeCells[i][j].getContent().equals(CellContent.EMPTY)) {
                     System.out.print(" ");
                 } else {
                     System.out.print("#");

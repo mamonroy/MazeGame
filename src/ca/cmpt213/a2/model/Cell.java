@@ -29,7 +29,7 @@ public class Cell {
         isExplored = true;
     }
 
-    public void setBordersUnexplored() {
-        isExplored = false;
-    }
+//    public void setBordersUnexplored() {
+//        isExplored = false;
+//    }
 } // Cell.java
