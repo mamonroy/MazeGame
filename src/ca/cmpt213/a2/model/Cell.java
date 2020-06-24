@@ -15,7 +15,9 @@ public class Cell {
             case HERO -> this.content = CellContent.HERO;
             case MONSTER -> this.content = CellContent.MONSTER;
             case POWER -> this.content = CellContent.POWER;
-            default -> { assert false : "Unknown error content!"; }
+            default -> {
+                assert false : "Unknown cell content!";
+            }
         }
     }
 
@@ -27,5 +29,7 @@ public class Cell {
         isExplored = true;
     }
 
-    public void setBordersUnexplored() { isExplored = false; }
+    public void setBordersUnexplored() {
+        isExplored = false;
+    }
 } // Cell.java

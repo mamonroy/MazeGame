@@ -2,7 +2,7 @@ package ca.cmpt213.a2.model;
 
 public class Hero {
     private static int powerCount = 0;
-    private Position heroPosition = new Position(1, 1);
+    private final Position heroPosition = new Position(1, 1);
     private boolean isAlive = true;
 
 

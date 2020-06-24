@@ -14,6 +14,5 @@ public class Main {
 
         Maze obj = new Maze();
         obj.displayMaze();
-        
     }
 } // Main.java

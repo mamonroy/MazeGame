@@ -20,8 +20,8 @@ public class Maze {
 
     public Maze() {
 
-        for(int i = 0; i < MAZE_HEIGHT; i++) {
-            for(int j = 0; j < MAZE_WIDTH ; j++) {
+        for (int i = 0; i < MAZE_HEIGHT; i++) {
+            for (int j = 0; j < MAZE_WIDTH; j++) {
                 mazeCells[i][j] = new Cell();
             }
         }
@@ -44,29 +44,15 @@ public class Maze {
     private void setBorderWallsAsUnexplored() {
 
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
-//             setCellAsExplored(row, FIRST_COL);
-//             setCellAsExplored(row, LAST_COL);
             mazeCells[row][FIRST_COL].setBordersUnexplored();
             mazeCells[row][LAST_COL].setBordersUnexplored();
         }
 
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
-//             setCellAsExplored(FIRST_ROW, col);
-//             setCellAsExplored(LAST_ROW, col);
             mazeCells[FIRST_ROW][col].setBordersUnexplored();
             mazeCells[LAST_ROW][col].setBordersUnexplored();
         }
     }
-//    private void setBorderWallsAsExplored() {
-//        for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
-//            setCellAsExplored(row, FIRST_COL);
-//            setCellAsExplored(row, LAST_COL);
-//        }
-//        for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
-//            setCellAsExplored(FIRST_ROW, col);
-//            setCellAsExplored(LAST_ROW, col);
-//        }
-//    }
 
     private void setCellAsExplored(int rowNum, int colNum) {
         mazeCells[rowNum][colNum].setExplored();
@@ -189,11 +175,19 @@ public class Maze {
     }
 
     private void clearWallsAtCorners() {
-        setCellContentEmpty(FIRST_ROW + 1, FIRST_COL + 1);  // Already done in maze generation process
+        // Already done in maze generation process
         // Included here for code completeness!
+        setCellContentEmpty(FIRST_ROW + 1, FIRST_COL + 1);
+        setCellAsExplored(FIRST_ROW + 1, FIRST_COL + 1);
+
         setCellContentEmpty(FIRST_ROW + 1, LAST_COL - 1);
+        setCellAsExplored(FIRST_ROW + 1, LAST_COL - 1);
+
+        setCellContentEmpty(LAST_ROW - 1, FIRST_COL + 1);
+        setCellAsExplored(LAST_ROW - 1, FIRST_COL + 1);
+
         setCellContentEmpty(LAST_ROW - 1, LAST_COL - 1);
-        setCellContentEmpty(LAST_ROW - 1, LAST_COL - 1);
+        setCellAsExplored(LAST_ROW - 1, LAST_COL - 1);
     }
 
     private void removeUnwantedWalls() {
@@ -213,16 +207,15 @@ public class Maze {
 
     public void displayMaze() {
 
-        for(int i = 0; i < MAZE_HEIGHT; i++ ) {
-            for(int j = 0; j < MAZE_WIDTH; j++) {
-                if(mazeCells[i][j].getExplored() == true) {
+        for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
+            for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
+                if (mazeCells[i][j].getExplored()) {
                     System.out.print(" ");
-                }
-                else {
+                } else {
                     System.out.print("#");
                 }
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 } // Maze.java
