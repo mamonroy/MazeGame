@@ -43,7 +43,6 @@ public class Maze {
     }
 
     private void setBorderWallsAsExplored() {
-
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
             mazeCells[row][FIRST_COL].setExplored();
             mazeCells[row][LAST_COL].setExplored();
