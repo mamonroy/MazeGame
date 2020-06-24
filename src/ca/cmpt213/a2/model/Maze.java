@@ -44,15 +44,15 @@ public class Maze {
     private void setBorderWallsAsUnexplored() {
 
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
-            setCellAsExplored(row, FIRST_COL);
-            setCellAsExplored(row, LAST_COL);
+//             setCellAsExplored(row, FIRST_COL);
+//             setCellAsExplored(row, LAST_COL);
             mazeCells[row][FIRST_COL].setBordersUnexplored();
             mazeCells[row][LAST_COL].setBordersUnexplored();
         }
 
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
-            setCellAsExplored(FIRST_ROW, col);
-            setCellAsExplored(LAST_ROW, col);
+//             setCellAsExplored(FIRST_ROW, col);
+//             setCellAsExplored(LAST_ROW, col);
             mazeCells[FIRST_ROW][col].setBordersUnexplored();
             mazeCells[LAST_ROW][col].setBordersUnexplored();
         }
