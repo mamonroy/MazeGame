@@ -1,6 +1,7 @@
 package ca.cmpt213.a2.model;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 public class Maze {
@@ -14,24 +15,24 @@ public class Maze {
     private static final int HERO_INITIAL_ROW = FIRST_ROW + 1;
     private static final int HERO_INITIAL_COL = FIRST_COL + 1;
 
+    private static final int NUM_INNER_WALLS_TO_BE_REMOVED = 30;
+
     // A maze with 20 columns (20 cells wide) and 15 rows (15 cells tall)
     // Maze rows are visualized and counted from top to bottom, left to right
     private static final Cell[][] mazeCells = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
 
     public Maze() {
 
-        for (int i = 0; i < MAZE_HEIGHT; i++) {
-            for (int j = 0; j < MAZE_WIDTH; j++) {
+        for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
+            for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
                 mazeCells[i][j] = new Cell();
             }
         }
 
         setBorderWallsAsExplored();
-        generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
-        clearWallsAtCorners();
-        removeUnwantedWalls();
-        // Makes sure that the borders are set back to not reached!
-//        setBorderWallsAsUnexplored();
+        generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL); // using iterative backtracker algorithm
+        clearWallsAtCorners(); // where the hero and monsters spawn
+        removeUnwantedInnerWalls(); // to allow multiple possible paths
     }
 
     public static int getMazeWidth() {
@@ -168,7 +169,7 @@ public class Maze {
                         }
                     }
                     default -> {
-                        assert false;
+                        assert false : "Unknown direction!";
                     }
                 }
             }
@@ -178,20 +179,60 @@ public class Maze {
     private void clearWallsAtCorners() {
         // Already done in maze generation process
         // Included here for code completeness!
-        setCellContentEmpty(FIRST_ROW + 1, FIRST_COL + 1);
-        setCellAsExplored(FIRST_ROW + 1, FIRST_COL + 1);
+        setCellContentEmpty(FIRST_ROW + 1, FIRST_COL + 1); // Hero spawns here!
 
-        setCellContentEmpty(FIRST_ROW + 1, LAST_COL - 1);
-        setCellAsExplored(FIRST_ROW + 1, LAST_COL - 1);
-
-        setCellContentEmpty(LAST_ROW - 1, FIRST_COL + 1);
-        setCellAsExplored(LAST_ROW - 1, FIRST_COL + 1);
-
-        setCellContentEmpty(LAST_ROW - 1, LAST_COL - 1);
-        setCellAsExplored(LAST_ROW - 1, LAST_COL - 1);
+        setCellContentEmpty(FIRST_ROW + 1, LAST_COL - 1); // First monster spawns here!
+        setCellContentEmpty(LAST_ROW - 1, FIRST_COL + 1); // Second monster spawns here!
+        setCellContentEmpty(LAST_ROW - 1, LAST_COL - 1); // Third monster spawns here!
     }
 
-    private void removeUnwantedWalls() {
+    private void removeUnwantedInnerWalls() {
+        // Source: https://www.geeksforgeeks.org/generating-random-numbers-in-java/
+        Random rand = new Random();
+        int wallCellRowToBeRemoved;
+        int wallCellColToBeRemoved;
+        int numWallsToBeRemoved = NUM_INNER_WALLS_TO_BE_REMOVED;
+
+        while (numWallsToBeRemoved > 0) {
+            wallCellRowToBeRemoved = rand.nextInt(LAST_ROW - 2) + 1;
+            wallCellColToBeRemoved = rand.nextInt(LAST_COL - 2) + 1;
+            if (mazeCells[wallCellRowToBeRemoved][wallCellColToBeRemoved].getContent().equals(CellContent.WALL) &&
+                    checkTwoByTwoConstraint(wallCellRowToBeRemoved, wallCellColToBeRemoved)) {
+                setCellContentEmpty(wallCellRowToBeRemoved, wallCellColToBeRemoved);
+                numWallsToBeRemoved--;
+            }
+        }
+    }
+
+    private boolean checkTwoByTwoConstraint(int rowNum, int colNum) {
+        return checkUpRight(rowNum, colNum) &&
+                checkUpLeft(rowNum, colNum) &&
+                checkDownRight(rowNum, colNum) &&
+                checkDownLeft(rowNum, colNum);
+    }
+
+    private boolean checkUpRight(int rowNum, int colNum) {
+        return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum - 1][colNum + 1].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkUpLeft(int rowNum, int colNum) {
+        return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum - 1][colNum - 1].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkDownRight(int rowNum, int colNum) {
+        return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum + 1][colNum + 1].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkDownLeft(int rowNum, int colNum) {
+        return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum + 1][colNum - 1].getContent().equals(CellContent.WALL) ||
+                mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
     }
 
     public CellContent getMazeCellContent(int rowNum, int colNum) {
