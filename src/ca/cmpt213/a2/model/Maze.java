@@ -30,8 +30,7 @@ public class Maze {
         generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
         clearWallsAtCorners();
         removeUnwantedWalls();
-        // Makes sure that the borders are set back to not reached!
-//        setBorderWallsAsUnexplored();
+        setInvisibleCells();
     }
 
     public static int getMazeWidth() {
@@ -52,6 +51,15 @@ public class Maze {
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
             mazeCells[FIRST_ROW][col].setExplored();
             mazeCells[LAST_ROW][col].setExplored();
+        }
+    }
+
+    private void setInvisibleCells() {
+
+        for (int i = 1; i < MAZE_HEIGHT - 1; i++) {
+            for (int j = 1; j < MAZE_WIDTH - 1; j++) {
+                mazeCells[i][j].setVisible(false);
+            }
         }
     }
 
@@ -206,17 +214,59 @@ public class Maze {
         return mazeCells;
     }
 
-    public void displayMaze() {
+    public void putHeroPosition(Hero hero) {
+        setMazeCellContent(hero.getHeroYPos(), hero.getHeroYPos(), CellContent.HERO);
+    }
 
-        for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
-            for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
-                if (mazeCells[i][j].getContent().equals(CellContent.EMPTY)) {
-                    System.out.print(" ");
+    public void putMonsterPosition(Monster monster) {
+        setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(), CellContent.MONSTER);
+    }
+
+    public void putPowerPosition(Power pow) {
+        setMazeCellContent(pow.getPowerYPos(),pow.getPowerXPos(), CellContent.POWER);
+    }
+
+    public void displayCurrMaze() {
+
+        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+            for (int x = 0; x < MAZE_WIDTH; x++) {
+                if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility() == true) {
+                    System.out.printf("%s", " ");
+                } else if (mazeCells[y][x].getContent() == CellContent.WALL && mazeCells[y][x].getVisibility() == true) {
+                    System.out.printf("%s", "#");
+                } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
+                    System.out.printf("%s", "@");
+                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
+                    System.out.printf("%s", "!");
+                } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
+                    System.out.printf("%s", "$");
                 } else {
-                    System.out.print("#");
+                    System.out.printf("%s", ".");
                 }
             }
-            System.out.println();
+            System.out.printf("\n");
+        }
+    }
+
+    public void revealMaze() {
+
+        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+            for (int x = 0; x < MAZE_WIDTH; x++) {
+                if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
+                    System.out.printf("%s", " ");
+                } else if (mazeCells[y][x].getContent() == CellContent.WALL) {
+                    System.out.printf("%s", "#");
+                } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
+                    System.out.printf("%s", "@");
+                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
+                    System.out.printf("%s", "!");
+                } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
+                    System.out.printf("%s", "$");
+                } else {
+                    System.out.printf("%s", ".");
+                }
+            }
+            System.out.printf("\n");
         }
     }
 } // Maze.java

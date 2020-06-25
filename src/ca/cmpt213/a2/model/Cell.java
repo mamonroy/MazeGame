@@ -3,6 +3,7 @@ package ca.cmpt213.a2.model;
 public class Cell {
     private CellContent content = CellContent.WALL;
     private Boolean isExplored = false;
+    private Boolean isInvisible = true;
 
     public CellContent getContent() {
         return content;
@@ -19,6 +20,14 @@ public class Cell {
                 assert false : "Unknown cell content!";
             }
         }
+    }
+
+    public void setVisible(Boolean visible) {
+        isInvisible = visible;
+    }
+
+    public Boolean getVisibility() {
+        return isInvisible;
     }
 
     public Boolean getExplored() {
