@@ -346,6 +346,7 @@ public class Maze {
 
     public void displayCurrMaze() {
 
+        System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility() == true) {
@@ -368,6 +369,7 @@ public class Maze {
 
     public void revealMaze() {
 
+        System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
