@@ -2,6 +2,7 @@ package ca.cmpt213.a2.model;
 
 public class Monster {
     private Position monsterPosition;
+    private CellContent occupyingMazeCellContent = CellContent.EMPTY;
     private boolean isAlive = true;
 
     public Monster(int xPos, int yPos) {
@@ -30,6 +31,14 @@ public class Monster {
 
     public int getMonsterYPos() {
         return monsterPosition.getYPosition();
+    }
+
+    public CellContent getOccupyingMazeCellContent() {
+        return occupyingMazeCellContent;
+    }
+
+    public void setOccupyingMazeCellContent(CellContent occupyingMazeCellContent) {
+        this.occupyingMazeCellContent = occupyingMazeCellContent;
     }
 
     public boolean getMonsterLifeStatus() {
