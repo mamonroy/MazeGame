@@ -93,28 +93,24 @@ public class Main {
                 for (String dir : randomDirs) {
                     if (!successfulMove) {
                         switch (dir) {
-                            case "left" -> {
-                                nextCellContent = mazeMap.getMazeCellContent(monster.getMonsterYPos(),
-                                        monster.getMonsterXPos() - 1);
-                            }
-                            case "right" -> {
-                                nextCellContent = mazeMap.getMazeCellContent(monster.getMonsterYPos(),
-                                        monster.getMonsterXPos() + 1);
-                            }
-                            case "up" -> {
-                                nextCellContent = mazeMap.getMazeCellContent(monster.getMonsterYPos() - 1,
-                                        monster.getMonsterXPos());
-                            }
-                            case "down" -> {
-                                nextCellContent = mazeMap.getMazeCellContent(monster.getMonsterYPos() + 1,
-                                        monster.getMonsterXPos());
-                            }
+                            case "left" -> nextCellContent = mazeMap.getMazeCellContent(
+                                    monster.getMonsterYPos(), monster.getMonsterXPos() - 1);
+
+                            case "right" -> nextCellContent = mazeMap.getMazeCellContent(
+                                    monster.getMonsterYPos(), monster.getMonsterXPos() + 1);
+
+                            case "up" -> nextCellContent = mazeMap.getMazeCellContent(
+                                    monster.getMonsterYPos() - 1, monster.getMonsterXPos());
+
+                            case "down" -> nextCellContent = mazeMap.getMazeCellContent(
+                                    monster.getMonsterYPos() + 1, monster.getMonsterXPos());
                             default -> {
                                 assert false : "Unknown direction!";
                             }
                         }
                         switch (nextCellContent) {
-                            case EMPTY, POWER, MONSTER -> {
+                            case WALL -> successfulMove = false;
+                            case EMPTY, MONSTER, POWER -> {
                                 moveIndividualMonster(monster, nextCellContent, dir);
                                 setPositionOfIndividualMonsterOnMaze(monster);
                                 successfulMove = true;
@@ -130,7 +126,9 @@ public class Main {
                                 }
                                 successfulMove = true;
                             }
-                            default -> successfulMove = false; // Can't move into a wall
+                            default -> {
+                                assert false;
+                            }
                         }
                     }
                 }
@@ -146,7 +144,9 @@ public class Main {
             case "right" -> monster.moveMonsterRight();
             case "up" -> monster.moveMonsterUp();
             case "down" -> monster.moveMonsterDown();
-            default -> { assert false : "No a valid direction for movement!"; }
+            default -> {
+                assert false : "No a valid direction for movement!";
+            }
         }
     }
 
