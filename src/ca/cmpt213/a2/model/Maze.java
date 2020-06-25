@@ -34,6 +34,14 @@ public class Maze {
         validateMaze();
     }
 
+    public static int getMazeWidth() {
+        return MAZE_WIDTH;
+    }
+
+    public static int getMazeHeight() {
+        return MAZE_HEIGHT;
+    }
+
     private void implementMaze(int rowNum, int colNum) {
         generateMaze(rowNum, colNum); // using iterative backtracker algorithm
         clearWallsAtCorners(); // where the hero and monsters spawn
@@ -278,15 +286,6 @@ public class Maze {
         return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) &&
                 mazeCells[rowNum + 1][colNum - 1].getContent().equals(CellContent.WALL) &&
                 mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
-    }
-
-
-    public static int getMazeWidth() {
-        return MAZE_WIDTH;
-    }
-
-    public static int getMazeHeight() {
-        return MAZE_HEIGHT;
     }
 
     public CellContent getMazeCellContent(int rowNum, int colNum) {
