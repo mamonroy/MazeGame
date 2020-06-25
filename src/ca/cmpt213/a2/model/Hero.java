@@ -5,7 +5,6 @@ public class Hero {
     private final Position heroPosition = new Position(1, 1);
     private boolean isAlive = true;
 
-
     public static int getPowerCount() {
         return powerCount;
     }
@@ -49,4 +48,5 @@ public class Hero {
     public void killHero() {
         isAlive = false;
     }
+
 } // Hero.java

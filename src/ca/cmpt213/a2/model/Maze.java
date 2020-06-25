@@ -32,6 +32,7 @@ public class Maze {
         setBorderWallsAsExplored();
         implementMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
         validateMaze();
+        setInvisibleCells();
     }
 
     public static int getMazeWidth() {
@@ -58,6 +59,15 @@ public class Maze {
         for (int col = FIRST_COL; col < MAZE_WIDTH; col++) {
             mazeCells[FIRST_ROW][col].setExplored();
             mazeCells[LAST_ROW][col].setExplored();
+        }
+    }
+
+    private void setInvisibleCells() {
+
+        for (int i = 1; i < MAZE_HEIGHT - 1; i++) {
+            for (int j = 1; j < MAZE_WIDTH - 1; j++) {
+                mazeCells[i][j].setVisible(false);
+            }
         }
     }
 
@@ -300,17 +310,78 @@ public class Maze {
         return mazeCells;
     }
 
-    public void displayMaze() {
+    public void putHeroPosition(Hero hero) {
+        setMazeCellContent(hero.getHeroYPos(), hero.getHeroYPos(), CellContent.HERO);
+    }
 
-        for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
-            for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
-                if (mazeCells[i][j].getContent().equals(CellContent.EMPTY)) {
-                    System.out.print(" ");
+    public void putMonsterPosition(Monster monster) {
+        setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(), CellContent.MONSTER);
+    }
+
+    public void putPowerRandomly() {
+
+        Random randGen = new Random();
+        int range_X = 18;
+        int range_Y = 13;
+        int randomPos_X = randGen.nextInt(range_X) + 1;
+        int randomPos_Y = randGen.nextInt(range_Y) + 1;
+        Power pow = new Power(randomPos_X, randomPos_Y);
+        int row = pow.getPowerYPos();
+        int column = pow.getPowerXPos();
+
+        // Keep finding an OPEN CELL so that power is not placed on the same cell as hero/monster/wall
+        while(mazeCells[row][column].getContent() != CellContent.EMPTY &&
+                mazeCells[row][column].getContent() != CellContent.MONSTER) {
+
+            randomPos_X = randGen.nextInt(range_X) + 1;
+            randomPos_Y = randGen.nextInt(range_Y) + 1;
+            pow = new Power(randomPos_X, randomPos_Y);
+            row = pow.getPowerYPos();
+            column = pow.getPowerXPos();
+        }
+
+        setMazeCellContent(row,column, CellContent.POWER);
+    }
+
+    public void displayCurrMaze() {
+
+        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+            for (int x = 0; x < MAZE_WIDTH; x++) {
+                if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility() == true) {
+                    System.out.printf("%s", " ");
+                } else if (mazeCells[y][x].getContent() == CellContent.WALL && mazeCells[y][x].getVisibility() == true) {
+                    System.out.printf("%s", "#");
+                } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
+                    System.out.printf("%s", "@");
+                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
+                    System.out.printf("%s", "!");
+                } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
+                    System.out.printf("%s", "$");
                 } else {
-                    System.out.print("#");
+                    System.out.printf("%s", ".");
                 }
             }
-            System.out.println();
+            System.out.printf("\n");
+        }
+    }
+
+    public void revealMaze() {
+
+        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+            for (int x = 0; x < MAZE_WIDTH; x++) {
+                if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
+                    System.out.printf("%s", " ");
+                } else if (mazeCells[y][x].getContent() == CellContent.WALL) {
+                    System.out.printf("%s", "#");
+                } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
+                    System.out.printf("%s", "@");
+                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
+                    System.out.printf("%s", "!");
+                } else{
+                    System.out.printf("%s", "$");
+                }
+            }
+            System.out.printf("\n");
         }
     }
 } // Maze.java
