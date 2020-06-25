@@ -41,7 +41,7 @@ public class Hero {
         return heroPosition.getYPosition();
     }
 
-    public boolean getHeroLifeStatus() {
+    public boolean isHeroAlive() {
         return isAlive;
     }
 

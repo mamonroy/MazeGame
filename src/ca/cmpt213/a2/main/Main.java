@@ -15,10 +15,10 @@ public class Main {
     private static final int THIRD_MONSTER_INITIAL_X_POS = 18;
     private static final int THIRD_MONSTER_INITIAL_Y_POS = 13;
 
-    private static List<Monster> monsters = new ArrayList<>();
+    private static final List<Monster> monsters = new ArrayList<>();
     private static Maze mazeMap;
 
-    public static void main(String []args) {
+    public static void main(String[] args) {
 
         TextUI.mainDisplay();
         mazeMap = new Maze();
@@ -50,20 +50,29 @@ public class Main {
 
     private static void setPositionOfMonstersOnMaze() {
         for (Monster monster : monsters) {
-            if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
-                    .equals(CellContent.POWER)) {
-                monster.setOccupyingMazeCellContent(CellContent.POWER);
-            }
-            mazeMap.setMonsterPositionInMaze(monster);
+            setPositionOfIndividualMonsterOnMaze(monster);
         }
     }
 
-    private boolean isMonsterAlive (int monsterIndex) {
-        return monsters.get(monsterIndex).getMonsterLifeStatus();
+    private static void setPositionOfIndividualMonsterOnMaze(Monster monster) {
+        if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
+                .equals(CellContent.POWER)) {
+            monster.setOccupyingMazeCellContent(CellContent.POWER);
+        } else if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
+                .equals(CellContent.MONSTER)) {
+            monster.setOccupyingMazeCellContent(CellContent.MONSTER);
+        } else if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
+                .equals(CellContent.HERO)) {
+            monster.setOccupyingMazeCellContent(CellContent.HERO);
+        } else { // cell is empty!
+            monster.setOccupyingMazeCellContent(CellContent.EMPTY);
+        }
+
+        mazeMap.setMonsterPositionInMaze(monster);
     }
 
-    private void removeDeadMonster (int monsterIndex) {
-        monsters.remove(monsterIndex);
+    private void removeDeadMonster(Monster monster) {
+        monsters.remove(monster);
     }
 
     private void moveAliveMonsters() {
@@ -75,6 +84,7 @@ public class Main {
 
         for (Monster monster : monsters) {
             successfulMove = false;
+            nextCellContent = CellContent.WALL;
 
             randomDir = new RandomDirection();
             randomDirs = randomDir.getRandomizedDir();
@@ -103,12 +113,44 @@ public class Main {
                                 assert false : "Unknown direction!";
                             }
                         }
-                        // Deal with different cell cases here
-                    }
+                        switch (nextCellContent) {
+                            case EMPTY, POWER, MONSTER -> {
+                                moveIndividualMonster(monster, nextCellContent, dir);
+                                setPositionOfIndividualMonsterOnMaze(monster);
+                                successfulMove = true;
+                            }
+                            case HERO -> {
+                                moveIndividualMonster(monster, nextCellContent, dir);
+                                killHeroOrMonster();
 
+                                if (monster.isMonsterAlive()) {
+                                    setPositionOfIndividualMonsterOnMaze(monster);
+                                } else {
+                                    removeDeadMonster(monster);
+                                }
+                                successfulMove = true;
+                            }
+                            default -> successfulMove = false; // Can't move into a wall
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private void moveIndividualMonster(Monster monster, CellContent nextCellValue, String direction) {
+        mazeMap.setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(),
+                monster.getOccupyingMazeCellContent());
+        switch (direction) {
+            case "left" -> monster.moveMonsterLeft();
+            case "right" -> monster.moveMonsterRight();
+            case "up" -> monster.moveMonsterUp();
+            case "down" -> monster.moveMonsterDown();
+            default -> { assert false : "No a valid direction for movement!"; }
+        }
+    }
+
+    private void killHeroOrMonster() {
     }
 
 } // Main.java
