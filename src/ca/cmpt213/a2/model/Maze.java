@@ -15,7 +15,7 @@ public class Maze {
     private static final int HERO_INITIAL_ROW = FIRST_ROW + 1;
     private static final int HERO_INITIAL_COL = FIRST_COL + 1;
 
-    private static final int NUM_INNER_WALLS_TO_BE_REMOVED = 30;
+    private static final int NUM_INNER_WALLS_TO_BE_REMOVED = 40;
 
     // A maze with 20 columns (20 cells wide) and 15 rows (15 cells tall)
     // Maze rows are visualized and counted from top to bottom, left to right
@@ -30,18 +30,15 @@ public class Maze {
         }
 
         setBorderWallsAsExplored();
-        generateMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL); // using iterative backtracker algorithm
-        clearWallsAtCorners(); // where the hero and monsters spawn
-        removeUnwantedInnerWalls(); // to allow multiple possible paths
+        implementMaze(HERO_INITIAL_ROW, HERO_INITIAL_COL);
+        validateMaze();
         setInvisibleCells();
     }
 
-    public static int getMazeWidth() {
-        return MAZE_WIDTH;
-    }
-
-    public static int getMazeHeight() {
-        return MAZE_HEIGHT;
+    private void implementMaze(int rowNum, int colNum) {
+        generateMaze(rowNum, colNum); // using iterative backtracker algorithm
+        clearWallsAtCorners(); // where the hero and monsters spawn
+        removeUnwantedInnerWalls(); // to allow multiple possible paths
     }
 
     private void setBorderWallsAsExplored() {
@@ -187,10 +184,7 @@ public class Maze {
     }
 
     private void clearWallsAtCorners() {
-        // Already done in maze generation process
-        // Included here for code completeness!
         setCellContentEmpty(FIRST_ROW + 1, FIRST_COL + 1); // Hero spawns here!
-
         setCellContentEmpty(FIRST_ROW + 1, LAST_COL - 1); // First monster spawns here!
         setCellContentEmpty(LAST_ROW - 1, FIRST_COL + 1); // Second monster spawns here!
         setCellContentEmpty(LAST_ROW - 1, LAST_COL - 1); // Third monster spawns here!
@@ -204,45 +198,105 @@ public class Maze {
         int numWallsToBeRemoved = NUM_INNER_WALLS_TO_BE_REMOVED;
 
         while (numWallsToBeRemoved > 0) {
-            wallCellRowToBeRemoved = rand.nextInt(LAST_ROW - 2) + 1;
-            wallCellColToBeRemoved = rand.nextInt(LAST_COL - 2) + 1;
+            wallCellRowToBeRemoved = rand.nextInt(LAST_ROW - 1) + 1;
+            wallCellColToBeRemoved = rand.nextInt(LAST_COL - 1) + 1;
             if (mazeCells[wallCellRowToBeRemoved][wallCellColToBeRemoved].getContent().equals(CellContent.WALL) &&
-                    checkTwoByTwoConstraint(wallCellRowToBeRemoved, wallCellColToBeRemoved)) {
+                    satisfyTwoByTwoEmptyConstraint(wallCellRowToBeRemoved, wallCellColToBeRemoved)) {
                 setCellContentEmpty(wallCellRowToBeRemoved, wallCellColToBeRemoved);
                 numWallsToBeRemoved--;
             }
         }
     }
 
-    private boolean checkTwoByTwoConstraint(int rowNum, int colNum) {
-        return checkUpRight(rowNum, colNum) &&
-                checkUpLeft(rowNum, colNum) &&
-                checkDownRight(rowNum, colNum) &&
-                checkDownLeft(rowNum, colNum);
+    private boolean satisfyTwoByTwoEmptyConstraint(int rowNum, int colNum) {
+        return checkUpRightEmpty(rowNum, colNum) &&
+                checkUpLeftEmpty(rowNum, colNum) &&
+                checkDownRightEmpty(rowNum, colNum) &&
+                checkDownLeftEmpty(rowNum, colNum);
     }
 
-    private boolean checkUpRight(int rowNum, int colNum) {
+    private boolean checkUpRightEmpty(int rowNum, int colNum) {
         return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum - 1][colNum + 1].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
     }
 
-    private boolean checkUpLeft(int rowNum, int colNum) {
+    private boolean checkUpLeftEmpty(int rowNum, int colNum) {
         return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum - 1][colNum - 1].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
     }
 
-    private boolean checkDownRight(int rowNum, int colNum) {
+    private boolean checkDownRightEmpty(int rowNum, int colNum) {
         return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum + 1][colNum + 1].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
     }
 
-    private boolean checkDownLeft(int rowNum, int colNum) {
+    private boolean checkDownLeftEmpty(int rowNum, int colNum) {
         return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum + 1][colNum - 1].getContent().equals(CellContent.WALL) ||
                 mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
+    }
+
+    private void validateMaze() {
+        // Regenerate the maze until is is valid!
+        // (i.e. no 2x2 square of wall cells exist)
+        Random rand = new Random();
+        while (!satisfyTwoByTwoWallConstraint()) {
+            implementMaze((rand.nextInt(LAST_ROW - 1) + 1),
+                    (rand.nextInt(LAST_COL - 1) + 1));
+        }
+    }
+
+    private boolean satisfyTwoByTwoWallConstraint() {
+
+        for (int i = FIRST_ROW + 2; i < LAST_ROW - 1; i++) {
+            for (int j = FIRST_COL + 2; j < LAST_COL - 1; j++) {
+                if (mazeCells[i][j].getContent().equals(CellContent.WALL)) {
+                    if (checkUpRightWall(i, j) ||
+                            checkUpLeftWall(i, j) ||
+                            checkDownRightWall(i, j) ||
+                            checkDownLeftWall(i, j)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkUpRightWall(int rowNum, int colNum) {
+        return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum - 1][colNum + 1].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkUpLeftWall(int rowNum, int colNum) {
+        return mazeCells[rowNum - 1][colNum].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum - 1][colNum - 1].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkDownRightWall(int rowNum, int colNum) {
+        return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum + 1][colNum + 1].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum][colNum + 1].getContent().equals(CellContent.WALL);
+    }
+
+    private boolean checkDownLeftWall(int rowNum, int colNum) {
+        return mazeCells[rowNum + 1][colNum].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum + 1][colNum - 1].getContent().equals(CellContent.WALL) &&
+                mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
+    }
+
+
+    public static int getMazeWidth() {
+        return MAZE_WIDTH;
+    }
+
+    public static int getMazeHeight() {
+        return MAZE_HEIGHT;
     }
 
     public CellContent getMazeCellContent(int rowNum, int colNum) {
