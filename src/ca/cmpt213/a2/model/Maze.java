@@ -1,6 +1,7 @@
 package ca.cmpt213.a2.model;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
 public class Maze {
@@ -222,8 +223,29 @@ public class Maze {
         setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(), CellContent.MONSTER);
     }
 
-    public void putPowerPosition(Power pow) {
-        setMazeCellContent(pow.getPowerYPos(),pow.getPowerXPos(), CellContent.POWER);
+    public void putPowerRandomly() {
+
+        Random randGen = new Random();
+        int range_X = 18;
+        int range_Y = 13;
+        int randomPos_X = randGen.nextInt(range_X) + 1;
+        int randomPos_Y = randGen.nextInt(range_Y) + 1;
+        Power pow = new Power(randomPos_X, randomPos_Y);
+        int row = pow.getPowerYPos();
+        int column = pow.getPowerXPos();
+
+        // Keep finding an OPEN CELL so that power is not placed on the same cell as hero/monster/wall
+        while(mazeCells[row][column].getContent() != CellContent.EMPTY &&
+                mazeCells[row][column].getContent() != CellContent.MONSTER) {
+
+            randomPos_X = randGen.nextInt(range_X) + 1;
+            randomPos_Y = randGen.nextInt(range_Y) + 1;
+            pow = new Power(randomPos_X, randomPos_Y);
+            row = pow.getPowerYPos();
+            column = pow.getPowerXPos();
+        }
+
+        setMazeCellContent(row,column, CellContent.POWER);
     }
 
     public void displayCurrMaze() {

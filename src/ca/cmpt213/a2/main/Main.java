@@ -15,22 +15,15 @@ public class Main {
         Monster monster2 = new Monster(1,13);
         Monster monster3 = new Monster(18,13);
 
-        Random randGen = new Random();
-        int range_X = 18;
-        int range_Y = 13;
-        int randomPos_X = randGen.nextInt(range_X) + 1;
-        int randomPos_Y = randGen.nextInt(range_Y) + 1;
-        Power pow = new Power(randomPos_X, randomPos_Y);
-
         mazeMap.putHeroPosition(theHero);
         mazeMap.putMonsterPosition(monster1);
         mazeMap.putMonsterPosition(monster2);
         mazeMap.putMonsterPosition(monster3);
-        mazeMap.putPowerPosition(pow);
+        mazeMap.putPowerRandomly();
         mazeMap.displayCurrMaze();
         mazeMap.revealMaze();
 
-
+//        while(loop for execution) // In progress
 
 //        int monsters_kill = TextUI.inputMonstersKill();
 //        int powers = TextUI.inputPowers();

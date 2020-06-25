@@ -48,4 +48,5 @@ public class Hero {
     public void killHero() {
         isAlive = false;
     }
+
 } // Hero.java
