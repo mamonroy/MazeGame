@@ -260,10 +260,8 @@ public class Maze {
                     System.out.printf("%s", "@");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
                     System.out.printf("%s", "!");
-                } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
+                } else{
                     System.out.printf("%s", "$");
-                } else {
-                    System.out.printf("%s", ".");
                 }
             }
             System.out.printf("\n");
