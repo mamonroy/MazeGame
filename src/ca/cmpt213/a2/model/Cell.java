@@ -38,7 +38,7 @@ public class Cell {
         isExplored = true;
     }
 
-//    public void setBordersUnexplored() {
-//        isExplored = false;
-//    }
+    public void setUnexplored() {
+        isExplored = false;
+    }
 } // Cell.java

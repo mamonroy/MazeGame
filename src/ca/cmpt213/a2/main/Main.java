@@ -8,22 +8,17 @@ public class Main {
     public static void main(String []args) {
 
         TextUI.mainDisplay();
-
         Maze mazeMap = new Maze();
         Hero theHero = new Hero();
         Monster monster1 = new Monster(18,1);
         Monster monster2 = new Monster(1,13);
         Monster monster3 = new Monster(18,13);
-
         mazeMap.putHeroPosition(theHero);
         mazeMap.putMonsterPosition(monster1);
         mazeMap.putMonsterPosition(monster2);
         mazeMap.putMonsterPosition(monster3);
         mazeMap.putPowerRandomly();
         mazeMap.displayCurrMaze();
-        mazeMap.revealMaze();
-
-//        while(loop for execution) // In progress
 
 //        int monsters_kill = TextUI.inputMonstersKill();
 //        int powers = TextUI.inputPowers();
@@ -33,6 +28,10 @@ public class Main {
 //        if(move == 'm') {
 //            mazeMap.revealMaze();
 //        }
+        mazeMap.revealMaze();
+//        while(loop for execution to keep asking user) // In progress
+
+
 
 
 
