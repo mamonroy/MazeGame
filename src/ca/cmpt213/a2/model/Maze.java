@@ -4,6 +4,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+/**
+ * A class for generating a new, random game maze.
+ * An iterative backtracker algorithm is used to generate the maze.
+ * (Algorithm retrieved from: https://en.wikipedia.org/wiki/Maze_generation_algorithm)
+ *
+ *
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
+ */
 public class Maze {
     private static final int MAZE_WIDTH = 20;
     private static final int MAZE_HEIGHT = 15;
@@ -22,7 +31,6 @@ public class Maze {
     private static final Cell[][] mazeCells = new Cell[MAZE_HEIGHT][MAZE_WIDTH];
 
     public Maze() {
-
         for (int i = FIRST_ROW; i < MAZE_HEIGHT; i++) {
             for (int j = FIRST_COL; j < MAZE_WIDTH; j++) {
                 mazeCells[i][j] = new Cell();
@@ -35,6 +43,14 @@ public class Maze {
         setInvisibleCells();
     }
 
+    public static int getMazeWidth() {
+        return MAZE_WIDTH;
+    }
+
+    public static int getMazeHeight() {
+        return MAZE_HEIGHT;
+    }
+
     private void implementMaze(int rowNum, int colNum) {
         generateMaze(rowNum, colNum); // using iterative backtracker algorithm
         clearWallsAtCorners(); // where the hero and monsters spawn
@@ -42,7 +58,6 @@ public class Maze {
     }
 
     private void setBorderWallsAsExplored() {
-
         for (int row = FIRST_ROW; row < MAZE_HEIGHT; row++) {
             mazeCells[row][FIRST_COL].setExplored();
             mazeCells[row][LAST_COL].setExplored();
@@ -55,10 +70,9 @@ public class Maze {
     }
 
     private void setInvisibleCells() {
-
         for (int i = 1; i < MAZE_HEIGHT - 1; i++) {
             for (int j = 1; j < MAZE_WIDTH - 1; j++) {
-                mazeCells[i][j].setVisible(false);
+                mazeCells[i][j].setVisibility(false);
             }
         }
     }
@@ -78,7 +92,6 @@ public class Maze {
         mazeCells[rowNum][colNum].setContent(CellContent.EMPTY);
     }
 
-    // Algorithm Source: https://en.wikipedia.org/wiki/Maze_generation_algorithm
     private void iterativeBacktracker(int rowNum, int colNum) {
         Stack<Integer> cellIndexStack = new Stack<>();
         cellIndexStack.push(rowNum);
@@ -250,7 +263,6 @@ public class Maze {
     }
 
     private boolean satisfyTwoByTwoWallConstraint() {
-
         for (int i = FIRST_ROW + 2; i < LAST_ROW - 1; i++) {
             for (int j = FIRST_COL + 2; j < LAST_COL - 1; j++) {
                 if (mazeCells[i][j].getContent().equals(CellContent.WALL)) {
@@ -290,14 +302,6 @@ public class Maze {
                 mazeCells[rowNum][colNum - 1].getContent().equals(CellContent.WALL);
     }
 
-    public static int getMazeWidth() {
-        return MAZE_WIDTH;
-    }
-
-    public static int getMazeHeight() {
-        return MAZE_HEIGHT;
-    }
-
     public CellContent getMazeCellContent(int rowNum, int colNum) {
         return mazeCells[rowNum][colNum].getContent();
     }
@@ -307,11 +311,7 @@ public class Maze {
     }
 
     public void setMazeCellVisible(int rowNum, int colNum) {
-        mazeCells[rowNum][colNum].setVisible(true);
-    }
-
-    public Cell[][] getMazeCells() {
-        return mazeCells.clone();
+        mazeCells[rowNum][colNum].setVisibility(true);
     }
 
     public void setHeroPositionInMaze(Hero hero) {
@@ -323,29 +323,30 @@ public class Maze {
     }
 
     public void setPowerInMaze(Power power) {
-
         setMazeCellContent(power.getPowerYPos(), power.getPowerXPos(), CellContent.POWER);
     }
 
-    public void displayCurrMaze(boolean isHeroAlive) {
+    public Cell[][] getMazeCells() {
+        return mazeCells.clone();
+    }
 
+    public void displayCurrMaze(boolean isHeroAlive) {
         char symbol;
-        if(isHeroAlive) {
+        if (isHeroAlive) {
             symbol = '@';
-        }
-        else {
+        } else {
             symbol = 'X';
         }
 
         System.out.println("\nMaze:");
-        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+        for (int y = 0; y < MAZE_HEIGHT; y++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility()) {
                     System.out.print(" ");
                 } else if (mazeCells[y][x].getContent() == CellContent.WALL && mazeCells[y][x].getVisibility()) {
                     System.out.print("#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
-                    System.out.format("%c",symbol);
+                    System.out.format("%c", symbol);
                 } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
                     System.out.print("$");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
@@ -359,24 +360,22 @@ public class Maze {
     }
 
     public void revealMaze(boolean isHeroAlive) {
-
         char symbol;
-        if(isHeroAlive) {
+        if (isHeroAlive) {
             symbol = '@';
-        }
-        else {
+        } else {
             symbol = 'X';
         }
 
         System.out.println("\nMaze:");
-        for (int y = 0; y < MAZE_HEIGHT; y ++) {
+        for (int y = 0; y < MAZE_HEIGHT; y++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
                     System.out.print(" ");
                 } else if (mazeCells[y][x].getContent() == CellContent.WALL) {
                     System.out.print("#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
-                    System.out.format("%c",symbol);
+                    System.out.format("%c", symbol);
                 } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
                     System.out.print("$");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {

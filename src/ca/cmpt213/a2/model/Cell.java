@@ -1,5 +1,11 @@
 package ca.cmpt213.a2.model;
 
+/**
+ * A class for holding information of maze cells.
+ *
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
+ */
 public class Cell {
     private CellContent content = CellContent.WALL;
     private Boolean isExplored = false;
@@ -22,12 +28,12 @@ public class Cell {
         }
     }
 
-    public void setVisible(Boolean visible) {
-        isInvisible = visible;
-    }
-
     public Boolean getVisibility() {
         return isInvisible;
+    }
+
+    public void setVisibility(Boolean visibility) {
+        isInvisible = visibility;
     }
 
     public Boolean getExplored() {
@@ -36,9 +42,5 @@ public class Cell {
 
     public void setExplored() {
         isExplored = true;
-    }
-
-    public void setUnexplored() {
-        isExplored = false;
     }
 } // Cell.java
