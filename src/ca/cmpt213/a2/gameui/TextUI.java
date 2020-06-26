@@ -23,9 +23,9 @@ public class TextUI {
 
     }
 
-    public static void gameInfo(int monstersKilled, int numPowers, int monstersAlive) {
+    public static void gameInfo(int monstersTobeKilled, int numPowers, int monstersAlive) {
 
-        System.out.format("Total number of monsters to be killed: %d\n", monstersKilled);
+        System.out.format("Total number of monsters to be killed: %d\n", monstersTobeKilled);
         System.out.format("Number of powers currently in possession: %d\n", numPowers);
         System.out.format("Number of monsters alive: %d\n", monstersAlive);
     }
@@ -38,13 +38,23 @@ public class TextUI {
         return move;
     }
 
+
     public static void invalidInput() {
-        System.out.print("Invalid move. Please enter just A (left), S (down), D (right), or W (up).!\n");
+        System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).!");
     }
 
     public static void invalidMove() {
-        System.out.print("Invalid move: you cannot move through walls!\n");
+        System.out.println("Invalid move: you cannot move through walls!");
+    }
+
+    public static void gameLost() {
+        System.out.println("I'm sorry, you have been eaten!");
+    }
+
+    public static void gameWon() {
+        System.out.println("Congratulations! You have won the game!");
     }
     
 
 } // TextUI.java
+
