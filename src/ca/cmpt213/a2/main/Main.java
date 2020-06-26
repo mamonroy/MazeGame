@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Main class - implements complete game logic and initiates a new game.
+ *
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
+ */
 public class Main {
-
     private static final int FIRST_HERO_INITIAL_X_POS = 1;
     private static final int FIRST_HERO_INITIAL_Y_POS = 1;
 
@@ -18,19 +23,17 @@ public class Main {
     private static final int SECOND_MONSTER_INITIAL_Y_POS = 13;
     private static final int THIRD_MONSTER_INITIAL_X_POS = 18;
     private static final int THIRD_MONSTER_INITIAL_Y_POS = 13;
-
-    private static boolean cheatActive = false;
-
-    private static Hero theHero;
     private static final List<Monster> monsters = new ArrayList<>();
-    private static final char validMoves[] = {'w','W','a','A','s','S','d','D'};
-    private static final char validOptions[] = {'m','c','?'};
+    private static final char[] validMoves = {'w', 'W', 'a', 'A', 's', 'S', 'd', 'D'};
+    private static final char[] validOptions = {'m', 'c', '?'};
+    private static final int TOTAL_NUMBER_OF_MONSTERS = 3;
+    private static boolean cheatActive = false;
+    private static Hero theHero;
     private static Maze mazeMap;
     private static Power power;
     private static String move;
 
     public static void main(String[] args) {
-
         TextUI.instructions();
         mazeMap = new Maze();
         theHero = new Hero(FIRST_HERO_INITIAL_Y_POS, FIRST_HERO_INITIAL_X_POS);
@@ -40,16 +43,16 @@ public class Main {
         setPositionOfPowerOnMaze();
         setPositionOfMonstersOnMaze();
         setPositionOfHeroOnMaze();
-        setVisibleNeighbours();
+        displayNeighbours();
 
         mazeMap.displayCurrMaze(theHero.isHeroAlive());
 
         boolean gameOver = false;
 
         // Loops over until the game is over!
-        while(!gameOver) {
+        while (!gameOver) {
 
-            if (cheatActive && monsters.size() < 3) {
+            if (cheatActive && monsters.size() < TOTAL_NUMBER_OF_MONSTERS) {
                 TextUI.gameWon();
                 gameOver = true;
                 continue;
@@ -68,14 +71,14 @@ public class Main {
 
             // Checks if the user input move is a valid character and only input of length 1
             move = TextUI.inputMove();
-            if (new String(validMoves).indexOf(move) >= 0 && String.valueOf(move).length() == 1) {
+            if (new String(validMoves).contains(move) && move.length() == 1) {
                 moveAliveMonsters();
                 checkHeroMove(move);
-                setVisibleNeighbours();
+                displayNeighbours();
                 mazeMap.displayCurrMaze(theHero.isHeroAlive());
                 gameInfo();
 
-            } else if (new String(validOptions).indexOf(move) >= 0 && String.valueOf(move).length() == 1) {
+            } else if (new String(validOptions).contains(move) && move.length() == 1) {
                 checkOptions(move);
 
             } else {
@@ -85,44 +88,7 @@ public class Main {
         mazeMap.revealMaze(theHero.isHeroAlive());
     }
 
-    private static Monster checkWhichMonster() {
-
-        Monster monster = null;
-
-        for(int i = 0; i < monsters.size(); i++) {
-            if(theHero.getHeroYPos() == monsters.get(i).getMonsterYPos() &&
-                    theHero.getHeroXPos() == monsters.get(i).getMonsterXPos()) {
-                monster = monsters.get(i);
-            }
-        }
-        return monster;
-    }
-
-    private static void setPositionOfHeroOnMaze() {
-
-        if (mazeMap.getMazeCellContent(theHero.getHeroYPos(), theHero.getHeroXPos())
-                .equals(CellContent.POWER)) {
-            theHero.incrementPowerCount();
-            theHero.setOccupyingMazeCellContent(CellContent.HERO);
-            setPositionOfPowerOnMaze();
-        } else if(mazeMap.getMazeCellContent(theHero.getHeroYPos(), theHero.getHeroXPos()).equals(CellContent.MONSTER)) {
-            Monster monster = checkWhichMonster();
-            killHeroOrMonster(monster);
-            if(!monster.isMonsterAlive()) {
-                removeDeadMonster(monster);
-                theHero.setOccupyingMazeCellContent(CellContent.HERO);
-            }
-            else {
-                theHero.killHero();
-            }
-        } else { // cell is empty!
-            theHero.setOccupyingMazeCellContent(CellContent.EMPTY);
-        }
-
-        mazeMap.setHeroPositionInMaze(theHero);
-    }
     private static void setPositionOfPowerOnMaze() {
-
         Random randGen = new Random();
         Cell[][] mazeTemp = mazeMap.getMazeCells();
 
@@ -135,7 +101,7 @@ public class Main {
         int randomPos_Y = randGen.nextInt(range_Y) + 1;
 
         // Keep finding an OPEN CELL so that power is not placed on the same cell as Wall
-        while(!mazeTemp[randomPos_Y][randomPos_X].getContent().equals(CellContent.EMPTY)) {
+        while (!mazeTemp[randomPos_Y][randomPos_X].getContent().equals(CellContent.EMPTY)) {
             randomPos_X = randGen.nextInt(range_X) + 1;
             randomPos_Y = randGen.nextInt(range_Y) + 1;
         }
@@ -144,6 +110,21 @@ public class Main {
 
         setCurrentMoveEmpty("Power");
         mazeMap.setPowerInMaze(power);
+    }
+
+    // Set the current cell to be EMPTY AND/OR Visible (Visibility Only applies to hero!) before going to another cell!
+    private static void setCurrentMoveEmpty(String inGameCharacter) {
+        if (inGameCharacter.equals("Hero")) {
+            int row = theHero.getHeroYPos();
+            int column = theHero.getHeroXPos();
+            mazeMap.setMazeCellContent(row, column, CellContent.EMPTY);
+            mazeMap.setMazeCellVisible(row, column);
+        } else if (inGameCharacter.equals("Power")) {
+            int row = power.getPowerYPos();
+            int column = power.getPowerXPos();
+            mazeMap.setMazeCellContent(row, column, CellContent.EMPTY);
+        }
+
     }
 
     private static void setPositionOfMonstersOnMaze() {
@@ -169,57 +150,45 @@ public class Main {
         mazeMap.setMonsterPositionInMaze(monster);
     }
 
+    private static void setPositionOfHeroOnMaze() {
+        if (mazeMap.getMazeCellContent(theHero.getHeroYPos(), theHero.getHeroXPos())
+                .equals(CellContent.POWER)) {
+            theHero.incrementPowerCount();
+            theHero.setOccupyingMazeCellContent(CellContent.HERO);
+            setPositionOfPowerOnMaze();
+        } else if (mazeMap.getMazeCellContent(theHero.getHeroYPos(), theHero.getHeroXPos()).equals(CellContent.MONSTER)) {
+            Monster monster = checkWhichMonster();
+            killHeroOrMonster(monster);
+            if (!monster.isMonsterAlive()) {
+                removeDeadMonster(monster);
+                theHero.setOccupyingMazeCellContent(CellContent.HERO);
+            } else {
+                theHero.killHero();
+            }
+        } else { // cell is empty!
+            theHero.setOccupyingMazeCellContent(CellContent.EMPTY);
+        }
+
+        mazeMap.setHeroPositionInMaze(theHero);
+    }
+
+    private static Monster checkWhichMonster() {
+        Monster monster = null;
+
+        for (int i = 0; i < monsters.size(); i++) {
+            if (theHero.getHeroYPos() == monsters.get(i).getMonsterYPos() &&
+                    theHero.getHeroXPos() == monsters.get(i).getMonsterXPos()) {
+                monster = monsters.get(i);
+            }
+        }
+        return monster;
+    }
+
     private static void removeDeadMonster(Monster monster) {
         monsters.remove(monster);
     }
 
-    private static void setVisibleNeighbours() {
-
-        // Up, Left, Down, Right
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() - 1, theHero.getHeroXPos());
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos(), theHero.getHeroXPos() - 1);
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos());
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos(), theHero.getHeroXPos() + 1);
-
-        // Diagonals
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos() - 1);
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() - 1, theHero.getHeroXPos() + 1);
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() -1, theHero.getHeroYPos() -1 );
-        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos() + 1);
-
-    }
-
-    // Set the current cell to be EMPTY AND/OR Visible (Visible Only applies to hero!) before going to another cell!
-    private static void setCurrentMoveEmpty(String inGameCharacter) {
-
-        if(inGameCharacter.equals("Hero")) {
-            int row = theHero.getHeroYPos();
-            int column = theHero.getHeroXPos();
-            mazeMap.setMazeCellContent(row,column,CellContent.EMPTY);
-            mazeMap.setMazeCellVisible(row,column);
-        }
-
-        else if(inGameCharacter.equals("Power")) {
-            int row = power.getPowerYPos();
-            int column = power.getPowerXPos();
-            mazeMap.setMazeCellContent(row,column,CellContent.EMPTY);
-        }
-
-    }
-
-    private static void moveHero(String move) {
-
-        setCurrentMoveEmpty("Hero");
-        switch (move) {
-            case "w", "W" -> theHero.moveHeroUp();
-            case "a", "A" -> theHero.moveHeroLeft();
-            case "s", "S" -> theHero.moveHeroDown();
-            case "d", "D" -> theHero.moveHeroRight();
-        }
-    }
-
     private static void checkHeroMove(String move) {
-
         boolean successfulMove = false;
         CellContent nextCellContent;
 
@@ -245,19 +214,44 @@ public class Main {
                 }
             }
 
-            switch(nextCellContent) {
-                case WALL -> {
-                    successfulMove = false;
-                    TextUI.invalidMove();
-                    move = TextUI.inputMove();
-                }
-                case POWER, EMPTY, MONSTER -> {
-                    moveHero(move);
-                    setPositionOfHeroOnMaze();
-                    successfulMove = true;
-                }
+            if (nextCellContent == CellContent.WALL) {
+                successfulMove = false;
+                TextUI.invalidMove();
+                move = TextUI.inputMove();
+            } else if (nextCellContent == CellContent.POWER ||
+                    nextCellContent == CellContent.EMPTY ||
+                    nextCellContent == CellContent.MONSTER) {
+                moveHero(move);
+                setPositionOfHeroOnMaze();
+                successfulMove = true;
             }
         }
+    }
+
+    private static void moveHero(String move) {
+        setCurrentMoveEmpty("Hero");
+        switch (move) {
+            case "w", "W" -> theHero.moveHeroUp();
+            case "a", "A" -> theHero.moveHeroLeft();
+            case "s", "S" -> theHero.moveHeroDown();
+            case "d", "D" -> theHero.moveHeroRight();
+        }
+    }
+
+    private static void displayNeighbours() {
+
+        // Up, Left, Down, Right
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() - 1, theHero.getHeroXPos());
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos(), theHero.getHeroXPos() - 1);
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos());
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos(), theHero.getHeroXPos() + 1);
+
+        // Diagonals
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos() - 1);
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() - 1, theHero.getHeroXPos() + 1);
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() - 1, theHero.getHeroYPos() - 1);
+        mazeMap.setMazeCellVisible(theHero.getHeroYPos() + 1, theHero.getHeroXPos() + 1);
+
     }
 
     private static void moveAliveMonsters() {
@@ -266,7 +260,7 @@ public class Main {
         boolean successfulMove;
         CellContent nextCellContent;
 
-        for(int i = 0; i < monsters.size(); i++ ) {
+        for (int i = 0; i < monsters.size(); i++) {
             successfulMove = false;
             nextCellContent = CellContent.WALL;
 
@@ -292,15 +286,16 @@ public class Main {
                                 assert false : "Unknown direction!";
                             }
                         }
+
                         switch (nextCellContent) {
                             case WALL -> successfulMove = false;
                             case EMPTY, MONSTER, POWER -> {
-                                moveIndividualMonster(monsters.get(i), nextCellContent, dir);
+                                moveIndividualMonster(monsters.get(i), dir);
                                 setPositionOfIndividualMonsterOnMaze(monsters.get(i));
                                 successfulMove = true;
                             }
                             case HERO -> {
-                                moveIndividualMonster(monsters.get(i), nextCellContent, dir);
+                                moveIndividualMonster(monsters.get(i), dir);
                                 killHeroOrMonster(monsters.get(i));
 
                                 if (monsters.get(i).isMonsterAlive()) {
@@ -320,7 +315,7 @@ public class Main {
         }
     }
 
-    private static void moveIndividualMonster(Monster monster, CellContent nextCellValue, String direction) {
+    private static void moveIndividualMonster(Monster monster, String direction) {
         mazeMap.setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(),
                 monster.getOccupyingMazeCellContent());
         switch (direction) {
@@ -335,44 +330,38 @@ public class Main {
     }
 
     private static void killHeroOrMonster(Monster monster) {
-
         int numberOfPowers = theHero.getPowerCount();
-        if(numberOfPowers >= 1) {
+        if (numberOfPowers >= 1) {
             theHero.decrementPowerCount();
             monster.killMonster();
-        }
-        else {
+        } else {
             theHero.killHero();
         }
     }
 
     private static void checkOptions(String symbol) {
-
         int monstersAlive = monsters.size();
-        switch(symbol) {
-            case "?" -> {
-                gameInfo();
-            }
+        switch (symbol) {
+            case "?" -> gameInfo();
             case "m" -> {
                 mazeMap.revealMaze(theHero.isHeroAlive());
                 gameInfo();
             }
             case "c" -> {
-                cheatActive = true;
+                if (monstersAlive == TOTAL_NUMBER_OF_MONSTERS) {
+                    cheatActive = true;
+                }
             }
         }
     }
 
     private static void gameInfo() {
-
         int monstersAlive = monsters.size();
 
-        if(!cheatActive) {
+        if (!cheatActive) {
             TextUI.gameInfo(monstersAlive, theHero.getPowerCount(), monstersAlive);
-        }
-        else {
+        } else {
             TextUI.gameInfo(1, theHero.getPowerCount(), monstersAlive);
         }
     }
-
 } // Main.java

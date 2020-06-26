@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A class for generating an array of random direction strings.
+ *
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
+ */
 public class RandomDirection {
     String[] directions = {"left", "right", "up", "down"};
     List<String> randomizedDir = new ArrayList<>();

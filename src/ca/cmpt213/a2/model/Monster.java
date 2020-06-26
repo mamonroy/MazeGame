@@ -1,5 +1,11 @@
 package ca.cmpt213.a2.model;
 
+/**
+ * A class for holding information of game monster(s).
+ *
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
+ */
 public class Monster {
     private final Position monsterPosition;
     private CellContent occupyingMazeCellContent = CellContent.EMPTY;
@@ -41,7 +47,11 @@ public class Monster {
         this.occupyingMazeCellContent = occupyingMazeCellContent;
     }
 
-    public boolean isMonsterAlive() { return isAlive; }
+    public boolean isMonsterAlive() {
+        return isAlive;
+    }
 
-    public void killMonster() { isAlive = false; }
+    public void killMonster() {
+        isAlive = false;
+    }
 } // Monster.java
