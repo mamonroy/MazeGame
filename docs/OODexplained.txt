@@ -1,0 +1,14 @@
+Explanation of how the OOD game design supports...
+
+a) maze generation (before the game begins)
+-------------------------------------------
+
+
+b) pseudo-random movement of the monsters
+-----------------------------------------
+- The monsters are initially placed in the three unoccupied corners of the maze (top right and bottom two corners) by invoking the public constructor method of the "Monster" class and passing their x-y positions (defined as constants in the main class, to allow for simple change in future iterations of the game).
+- Once the player performs a move (using 'w', 'a', 's' or 'd' keys) and the move is validated (e.g. not hitting a wall or trying to move out of game boundaries), all monsters move in a seperate, random direction as described below:
+* for each monster that is alive, moveAliveMonsters() method calls getRandomizedDir() from RandomDirection class to generate an array of direction strings ("left", "right", "up", "down" all shuffled to ensure randomness in the next direction/movement).
+* moveAliveMonsters() then checks if each monster has moved successfully (i.e. to a valid, unblocked cell): while the monster has not moved (i.e. successfulMove flag is false), the method checks the cell content corresponding to the next direction element in the random directions array (at least one move is guaranteed to be successful).
+* If the cell content is not 'WALL' (checked against the elements of the enum class "CellContent"), moveIndividualMonster() is invoked to move the monster to the cell in the corresponding direction. Depending on the cell content, the monster either kills the hero (that has no power), gets killed by the hero (check is performed in killHeroOrMonster()) or simply occupies the cell (may contain power or be occupied by other monsters).
+- As evident in this case, with approriate amount collaboration between classes and use of their public methods, as well as breaking the monster movement into two separate methods (moveAliveMonsters() to perform the validity of direction and movement and moveIndividualMonster() to perform the actual move), the OOD design helps with modularity, conciseness and clarity of the code as well as ease of debugging and detecting errors in pseudo-random movement of each monster.
