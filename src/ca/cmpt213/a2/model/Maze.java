@@ -306,6 +306,10 @@ public class Maze {
         mazeCells[rowNum][colNum].setContent(content);
     }
 
+    public void setMazeCellVisible(int rowNum, int colNum) {
+        mazeCells[rowNum][colNum].setVisible(true);
+    }
+
     public Cell[][] getMazeCells() {
         return mazeCells.clone();
     }
@@ -318,16 +322,16 @@ public class Maze {
         setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(), CellContent.MONSTER);
     }
 
-    public void placePowerRandomlyInMaze() {
+    public void placePowerRandomlyInMaze(Power power) {
 
         Random randGen = new Random();
         int range_X = LAST_COL - 1;
         int range_Y = LAST_ROW - 1;
         int randomPos_X = randGen.nextInt(range_X) + 1;
         int randomPos_Y = randGen.nextInt(range_Y) + 1;
-        Power pow = new Power(randomPos_X, randomPos_Y);
-        int row = pow.getPowerYPos();
-        int column = pow.getPowerXPos();
+        power = new Power(randomPos_X, randomPos_Y);
+        int row = power.getPowerYPos();
+        int column = power.getPowerXPos();
 
         // Keep finding an OPEN CELL so that power is not placed on the same cell as monster/wall
         while(!mazeCells[row][column].getContent().equals(CellContent.EMPTY) &&
@@ -335,9 +339,9 @@ public class Maze {
 
             randomPos_X = randGen.nextInt(range_X) + 1;
             randomPos_Y = randGen.nextInt(range_Y) + 1;
-            pow = new Power(randomPos_X, randomPos_Y);
-            row = pow.getPowerYPos();
-            column = pow.getPowerXPos();
+            power = new Power(randomPos_X, randomPos_Y);
+            row = power.getPowerYPos();
+            column = power.getPowerXPos();
         }
 
         setMazeCellContent(row,column, CellContent.POWER);
@@ -345,6 +349,7 @@ public class Maze {
 
     public void displayCurrMaze() {
 
+        System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility()) {
@@ -353,10 +358,10 @@ public class Maze {
                     System.out.printf("%s", "#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
                     System.out.printf("%s", "@");
-                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
-                    System.out.printf("%s", "!");
                 } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
                     System.out.printf("%s", "$");
+                } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
+                    System.out.printf("%s", "!");
                 } else {
                     System.out.printf("%s", ".");
                 }
@@ -367,6 +372,7 @@ public class Maze {
 
     public void revealMaze() {
 
+        System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
@@ -375,10 +381,10 @@ public class Maze {
                     System.out.printf("%s", "#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
                     System.out.printf("%s", "@");
+                } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
+                    System.out.printf("%s", "$");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
                     System.out.printf("%s", "!");
-                } else{
-                    System.out.printf("%s", "$");
                 }
             }
             System.out.print("\n");

@@ -1,11 +1,15 @@
 package ca.cmpt213.a2.model;
 
 public class Hero {
+    private final Position heroPosition;
     private static int powerCount = 0;
-    private Position heroPosition = new Position(1, 1);
+    private CellContent occupyingMazeCellContent = CellContent.EMPTY;
     private boolean isAlive = true;
 
-    public static int getPowerCount() {
+    public Hero(int xPos, int yPos) {
+        heroPosition = new Position(xPos, yPos);
+    }
+    public int getPowerCount() {
         return powerCount;
     }
 
@@ -47,6 +51,14 @@ public class Hero {
 
     public void killHero() {
         isAlive = false;
+    }
+
+    public CellContent getOccupyingMazeCellContent() {
+        return occupyingMazeCellContent;
+    }
+
+    public void setOccupyingMazeCellContent(CellContent occupyingMazeCellContent) {
+        this.occupyingMazeCellContent = occupyingMazeCellContent;
     }
 
 } // Hero.java
