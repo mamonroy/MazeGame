@@ -54,7 +54,5 @@ public class TextUI {
     public static void gameWon() {
         System.out.println("Congratulations! You have won the game!");
     }
-    
 
 } // TextUI.java
-

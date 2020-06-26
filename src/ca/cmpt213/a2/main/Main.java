@@ -151,14 +151,14 @@ public class Main {
     // Set the current cell to be EMPTY AND/OR Visible (Visible Only applies to hero!) before going to another cell!
     private static void setCurrentMoveEmpty(String inGameCharacter) {
 
-        if(inGameCharacter == "Hero") {
+        if(inGameCharacter.equals("Hero")) {
             int row = theHero.getHeroYPos();
             int column = theHero.getHeroXPos();
             mazeMap.setMazeCellContent(row,column,CellContent.EMPTY);
             mazeMap.setMazeCellVisible(row,column);
         }
 
-        else if(inGameCharacter == "Power") {
+        else if(inGameCharacter.equals("Power")) {
             int row = power.getPowerYPos();
             int column = power.getPowerXPos();
             mazeMap.setMazeCellContent(row,column,CellContent.EMPTY);
@@ -298,7 +298,7 @@ public class Main {
         int numberOfPowers = theHero.getPowerCount();
         if(numberOfPowers >= 1) {
             theHero.decrementPowerCount();
-            removeDeadMonster(monster);
+            monster.killMonster();
         }
         else {
             theHero.killHero();
