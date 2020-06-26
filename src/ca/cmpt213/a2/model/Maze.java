@@ -322,69 +322,65 @@ public class Maze {
         setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(), CellContent.MONSTER);
     }
 
-    public void placePowerRandomlyInMaze(Power power) {
+    public void setPowerInMaze(Power power) {
 
-        Random randGen = new Random();
-        int range_X = LAST_COL - 1;
-        int range_Y = LAST_ROW - 1;
-        int randomPos_X = randGen.nextInt(range_X) + 1;
-        int randomPos_Y = randGen.nextInt(range_Y) + 1;
-        power = new Power(randomPos_X, randomPos_Y);
-        int row = power.getPowerYPos();
-        int column = power.getPowerXPos();
-
-        // Keep finding an OPEN CELL so that power is not placed on the same cell as monster/wall
-        while(!mazeCells[row][column].getContent().equals(CellContent.EMPTY) &&
-                !mazeCells[row][column].getContent().equals(CellContent.MONSTER)) {
-
-            randomPos_X = randGen.nextInt(range_X) + 1;
-            randomPos_Y = randGen.nextInt(range_Y) + 1;
-            power = new Power(randomPos_X, randomPos_Y);
-            row = power.getPowerYPos();
-            column = power.getPowerXPos();
-        }
-
-        setMazeCellContent(row,column, CellContent.POWER);
+        setMazeCellContent(power.getPowerYPos(), power.getPowerXPos(), CellContent.POWER);
     }
 
-    public void displayCurrMaze() {
+    public void displayCurrMaze(boolean isHeroAlive) {
+
+        char symbol;
+        if(isHeroAlive) {
+            symbol = '@';
+        }
+        else {
+            symbol = 'X';
+        }
 
         System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY && mazeCells[y][x].getVisibility()) {
-                    System.out.printf("%s", " ");
+                    System.out.print(" ");
                 } else if (mazeCells[y][x].getContent() == CellContent.WALL && mazeCells[y][x].getVisibility()) {
-                    System.out.printf("%s", "#");
+                    System.out.print("#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
-                    System.out.printf("%s", "@");
+                    System.out.format("%c",symbol);
                 } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
-                    System.out.printf("%s", "$");
+                    System.out.print("$");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
-                    System.out.printf("%s", "!");
+                    System.out.print("!");
                 } else {
-                    System.out.printf("%s", ".");
+                    System.out.print(".");
                 }
             }
             System.out.print("\n");
         }
     }
 
-    public void revealMaze() {
+    public void revealMaze(boolean isHeroAlive) {
+
+        char symbol;
+        if(isHeroAlive) {
+            symbol = '@';
+        }
+        else {
+            symbol = 'X';
+        }
 
         System.out.println("\nMaze:");
         for (int y = 0; y < MAZE_HEIGHT; y ++) {
             for (int x = 0; x < MAZE_WIDTH; x++) {
                 if (mazeCells[y][x].getContent() == CellContent.EMPTY) {
-                    System.out.printf("%s", " ");
+                    System.out.print(" ");
                 } else if (mazeCells[y][x].getContent() == CellContent.WALL) {
-                    System.out.printf("%s", "#");
+                    System.out.print("#");
                 } else if (mazeCells[y][x].getContent() == CellContent.HERO) {
-                    System.out.printf("%s", "@");
+                    System.out.format("%c",symbol);
                 } else if (mazeCells[y][x].getContent() == CellContent.POWER) {
-                    System.out.printf("%s", "$");
+                    System.out.print("$");
                 } else if (mazeCells[y][x].getContent() == CellContent.MONSTER) {
-                    System.out.printf("%s", "!");
+                    System.out.print("!");
                 }
             }
             System.out.print("\n");

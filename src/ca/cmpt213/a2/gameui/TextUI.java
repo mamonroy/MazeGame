@@ -30,11 +30,11 @@ public class TextUI {
         System.out.format("Number of monsters alive: %d\n", monstersAlive);
     }
 
-    public static char inputMove() {
+    public static String inputMove() {
 
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter your move [WASD?]: ");
-        char move = sc.next().charAt(0);
+        String move = sc.nextLine();
         return move;
     }
 
@@ -52,7 +52,7 @@ public class TextUI {
     }
 
     public static void gameWon() {
-        System.out.println("Congratulations! You have won the game!");
+        System.out.println("\nCongratulations! You have won the game!");
     }
     
 
