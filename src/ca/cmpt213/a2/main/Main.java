@@ -370,7 +370,7 @@ public class Main {
         if (!cheatActive) {
             TextUI.gameInfo(monstersAlive, theHero.getPowerCount(), monstersAlive);
         } else {
-            TextUI.gameInfo(1, theHero.getPowerCount(), monstersAlive);
+            TextUI.gameInfo(monstersAlive - 2, theHero.getPowerCount(), monstersAlive);
         }
     }
 } // Main.java
