@@ -10,7 +10,7 @@ import java.util.Stack;
  * (Algorithm retrieved from: https://en.wikipedia.org/wiki/Maze_generation_algorithm)
  *
  *
- * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.ca)
  * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
  */
 public class Maze {
