@@ -136,6 +136,8 @@ public class Main {
     }
 
     private static void setPositionOfIndividualMonsterOnMaze(Monster monster) {
+        boolean fought = false;
+
         if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
                 .equals(CellContent.POWER)) {
             monster.setOccupyingMazeCellContent(CellContent.POWER);
@@ -145,11 +147,16 @@ public class Main {
         } else if (mazeMap.getMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos())
                 .equals(CellContent.HERO)) {
             monster.setOccupyingMazeCellContent(CellContent.HERO);
+            fought = true;
         } else { // cell is empty!
             monster.setOccupyingMazeCellContent(CellContent.EMPTY);
         }
-
-        mazeMap.setMonsterPositionInMaze(monster);
+        // Always make the CellContent as Hero if they fought on the same cell - to show the result whether Hero Dead or Alive on Maze
+        if(fought) {
+            mazeMap.setHeroPositionInMaze(theHero);
+        } else {
+            mazeMap.setMonsterPositionInMaze(monster);
+        }
     }
 
     private static void setPositionOfHeroOnMaze() {
@@ -324,7 +331,47 @@ public class Main {
         }
     }
 
+    // Checks if more than one monster occupies the same cell
+    private static int isMoreThanOne(Monster monster) {
+        int count = 0;
+        for(int i = 0; i < monsters.size(); i++) {
+            int other_monster_row = monsters.get(i).getMonsterYPos();
+            int other_monster_column = monsters.get(i).getMonsterXPos();
+            if(other_monster_row == monster.getMonsterYPos() && other_monster_column == monster.getMonsterXPos()) {
+                count += 1;
+            }
+        }
+        System.out.println(count);
+        return count;
+    }
+
+    // Checks if power and monster occupy same cell
+    private static boolean checkPowerMonsterSameCell() {
+        boolean flag = false;
+        for(int i = 0; i < monsters.size(); i++) {
+            int other_monster_row = monsters.get(i).getMonsterYPos();
+            int other_monster_column = monsters.get(i).getMonsterXPos();
+            if(other_monster_row == power.getPowerYPos() && other_monster_column == power.getPowerXPos()) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
     private static void moveIndividualMonster(Monster monster, String direction) {
+
+        // Idea: Sets the current cell to either empty, monster, or power before it moves to next cell!
+        // Checks if the monster thinks he is occupying a cell in which he's alone! : Checks if a cell only contains 1 monster
+        if(monster.getOccupyingMazeCellContent() == CellContent.MONSTER && isMoreThanOne(monster) == 1) {
+
+            // if the one lone monster is occupying the cell which is the same cell with the Power!
+            if(checkPowerMonsterSameCell() ) {
+                monster.setOccupyingMazeCellContent(CellContent.POWER);
+            } else {
+                monster.setOccupyingMazeCellContent(CellContent.EMPTY);
+            }
+        }
+
         mazeMap.setMazeCellContent(monster.getMonsterYPos(), monster.getMonsterXPos(),
                 monster.getOccupyingMazeCellContent());
         switch (direction) {
