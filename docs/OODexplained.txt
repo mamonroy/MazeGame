@@ -1,10 +1,18 @@
 Explanation of how the OOD game design supports...
 
-a) maze generation (before the game begins)
+a) Maze Generation (Generates a random map before the game beings)
 -------------------------------------------
+The maze generation uses the concept of Iterative Backtracker to be able to produce a random map everytime the player starts a new game. The random movement is generated using a Random Generator. Based on this, there's 0.25 or 25% chance for any of the four directions (Up,Down,Left,Right) to be explored. Moreover, this also reduces biases in creating a map that can either be too difficult or too easy to solve. It uses the stack data structure to track the cells that is to be explored.
+The stack will continue to add or remove cells as it tries to complete in generating a random maze. When the stack no longer has any cells store, it terminates and a final map will be produced. The upside of this is that it’s easy to implement and understand, code wise. However, this algorithm can be inefficient depending on the size of the maze. The size of the stack is proportional to the size of the maze. Meaning, the bigger the stack, the bigger the chances are more cells will be stored in the stack for tracking purposes.
+
+In terms of logic, the algorithm starts with the initial position, in this case the coordinates (1,1) where the first one is the row number and the second one is the column number.  Those will be called as current row and current column which will be the first in the stack but will also be popped initially to obtain the latest current column and row. The next direction (or next cell to visited) will be randomly chosen. For example, the left cell is to visited (assuming it has not been visited yet), an if condition will be checked
+to make sure that the current column is not at the left wall boundary. If it’s satisfied, the wall between the current cell and its unexplored neighbour will be removed. Furthermore, the current cell where wall used to be will be marked as explored. The previous unexplored neighbour will be set as an empty cell and be marked as explored. Push the coordinates of the neighbour onto stack. Repeat this until stack is empty.
+
+Now that the maze has been randomly generated, the unwanted walls inner walls will be removed to allow multiple possible paths. This randomly removes N number of inner wells. The N can be arbitrary chosen but can be dependent on the size of the whole maze. It is recommended to have reasonable amount inner walls (can be small N or large N depending on the size of the maze) to be removed to produce a good maze. In the case of the maze size in this algorithm, N=40 was most optimal.
+Thus, a random maze is now produced will have possible multiple paths.
 
 
-b) pseudo-random movement of the monsters
+b) Pseudo-random movement of the monsters
 -----------------------------------------
 - The monsters are initially placed in the three unoccupied corners of the maze (top right and bottom two corners) by invoking the public constructor method of the "Monster" class and passing their x-y positions (defined as constants in the main class, to allow for simple change in future iterations of the game).
 - Once the player performs a move (using 'w', 'a', 's' or 'd' keys) and the move is validated (e.g. not hitting a wall or trying to move out of game boundaries), all monsters move in a seperate, random direction as described below:

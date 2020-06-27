@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * Main class - implements complete game logic and initiates a new game.
  *
- * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.sfu)
+ * @author Mark Angelo Monroy (Student ID: 301326143, SFU ID: mamonroy@sfu.ca)
  * @author Kash Khodabakhshi (Student ID: 301203001, SFU ID: kkhodaba@sfu.ca)
  */
 public class Main {
@@ -72,8 +72,10 @@ public class Main {
             // Checks if the user input move is a valid character and only input of length 1
             move = TextUI.inputMove();
             if (new String(validMoves).contains(move) && move.length() == 1) {
-                moveAliveMonsters();
                 checkHeroMove(move);
+                if(theHero.isHeroAlive()) {
+                    moveAliveMonsters();
+                }
                 displayNeighbours();
                 mazeMap.displayCurrMaze(theHero.isHeroAlive());
                 gameInfo();
@@ -158,10 +160,12 @@ public class Main {
             setPositionOfPowerOnMaze();
         } else if (mazeMap.getMazeCellContent(theHero.getHeroYPos(), theHero.getHeroXPos()).equals(CellContent.MONSTER)) {
             Monster monster = checkWhichMonster();
-            killHeroOrMonster(monster);
-            if (!monster.isMonsterAlive()) {
-                removeDeadMonster(monster);
-                theHero.setOccupyingMazeCellContent(CellContent.HERO);
+            if(monster != null) {
+                killHeroOrMonster(monster);
+                if (!monster.isMonsterAlive()) {
+                    removeDeadMonster(monster);
+                    theHero.setOccupyingMazeCellContent(CellContent.HERO);
+                }
             } else {
                 theHero.killHero();
             }
@@ -208,8 +212,13 @@ public class Main {
                         (theHero.getHeroYPos(), theHero.getHeroXPos() + 1);
 
                 default -> {
-                    TextUI.invalidInput();
                     move = TextUI.inputMove();
+                    if(new String(validOptions).contains(move) && move.length() == 1) {
+                        checkOptions(move);
+                    }
+                    else {
+                        TextUI.invalidInput();
+                    }
                     continue;
                 }
             }
@@ -361,7 +370,7 @@ public class Main {
         if (!cheatActive) {
             TextUI.gameInfo(monstersAlive, theHero.getPowerCount(), monstersAlive);
         } else {
-            TextUI.gameInfo(1, theHero.getPowerCount(), monstersAlive);
+            TextUI.gameInfo(monstersAlive - 2, theHero.getPowerCount(), monstersAlive);
         }
     }
 } // Main.java
