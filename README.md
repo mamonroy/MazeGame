@@ -2,4 +2,3 @@
 
 *<h2> Technical Information*
 ![GitHub Logo](/docs/classDiagram.png)
-Format: ![Alt Text](url)
